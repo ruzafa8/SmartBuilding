@@ -1,8 +1,8 @@
 # SmartBuilding
-This is an IoT project which implements an smart parking door which detects using a Camera
-the cars' plates and open it automatically if that car's plate belong to the building.
+This is an IoT project which implements a smart parking door which detects using a Camera
+the car's plates and open it automatically if that car's plate belong to the building.
 
-# Componding AEs
+# Compounding AEs
 - Sensor
 - Camera
 - PlateDetectorAI
