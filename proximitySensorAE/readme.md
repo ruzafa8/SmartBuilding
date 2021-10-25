@@ -9,6 +9,6 @@
 3. A proximity sensor...
 
 ## Hardware set up
-
+![Breadboard schematics](/proximitySensorAE/proximitySensor_schematic.png)
 
 ## Software set up
