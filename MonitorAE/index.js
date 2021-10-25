@@ -1,6 +1,7 @@
 const cse = require('./services/cse');
 const onMessage = require('./models/mqtt');
 const {AE_NAME} = require('./config/cse');
+const processData = require('./controller/controller');
 
 
 cse.registerModule(AE_NAME, true, `NAME=${AE_NAME}`,'0').then(() => {
@@ -16,10 +17,7 @@ onMessage(async (topic, message) => {
 
         const ae = sgn.sur.split("/")[1]; //   Mobius/ae name/DATA/SUB_Monitor
         const data = sgn.nev.rep['m2m:cin'].con // content
-        process(ae,data);
-        console.log("originator", ae)
-        console.log("data", data);
-
+        processData(ae,data);
 });
 
 
