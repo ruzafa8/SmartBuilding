@@ -1,4 +1,4 @@
-[back](../)
+[back](./)
 
 # License Plate Recognition AE
 ## Introduction
