@@ -1,4 +1,4 @@
-[back](./)
+[back](/)
 # Proximity Sensor AE
 ## Introduction
 
