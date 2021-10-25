@@ -5,7 +5,7 @@ the car's plates and open it automatically if that car's plate belong to the bui
 
 # Compounding AEs
 
-- [ProximitySensor](./proximitySensorAE/readme.md)  
+- [ProximitySensor](./proximitySensorAE/)  
 - Camera
 - PlateDetectorAI
 - Building
@@ -13,4 +13,4 @@ the car's plates and open it automatically if that car's plate belong to the bui
 - Semaphore
 - ParkingDoor
 - BuildingApp
-- [Monitor](./MonitorAE/readme.md)
+- [Monitor](./MonitorAE/)
