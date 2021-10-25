@@ -1,4 +1,4 @@
-const {addDetection} = require('../models/mysql');
+const {addDetection} = require('../models/database');
 
 const onProximitySensor = () => {
     console.log("Proximity Sensor detected the presence of something");
