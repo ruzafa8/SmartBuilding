@@ -2,11 +2,12 @@ import sys
 import requests
 import json
 
-#AE_NAME = "LicensePlateRecog"
+# GLOBAL VARIABLES
 ACP_NAME = "MYACP"
 CSE_URL = "127.0.0.1:7579"
 CSE_NAME = "Mobius"
 CSE_RELEASE = 3
+
 
 ty = {
   "ACP": 1,
@@ -17,8 +18,8 @@ ty = {
 }
 
 
-#HTTP requests handeled here
-def requestCSE (url, ty, body, callback, originator):
+#HTTP requests handled here
+def requestCSE (url, ty, body, originator):
 
     Headers = {
       "Content-Type": "application/json;ty={}".format(ty),
@@ -34,23 +35,24 @@ def requestCSE (url, ty, body, callback, originator):
       body = json.dumps(body)
 
     r = requests.post('http://{}/{}{}'.format(CSE_URL, CSE_NAME, url), headers=Headers, data=body)
-    callback(r)
+    return r
 
 
-#Create CI function
-def createAE(ae, callback):
-    requestCSE("", ty["AE"], {
+#Create AE function
+def createAE(ae):
+    return requestCSE("", ty["AE"], {
       "m2m:ae": {
         "api": "N.org.demo.{}".format(ae),
         "rn": ae,
         "srv": ["{}".format(CSE_RELEASE)],
         "rr": True,
       },
-    }, callback, 'C{}'.format(ae))
+    }, 'C{}'.format(ae))
 
-#Create CI function
-def createACP(ae, acp, callback):
-    requestCSE("/{}".format(ae), ty["ACP"], {
+
+#Create ACP function
+def createACP(ae, acp):
+    return requestCSE("/{}".format(ae), ty["ACP"], {
       "m2m:acp": {
         "rn": acp,
         "pv": {
@@ -70,25 +72,28 @@ def createACP(ae, acp, callback):
           ],
         },
       },
-    }, callback, 'C{}'.format(ae))
+    }, 'C{}'.format(ae))
 
-#Create CI function
-def createCNT(ae, cnt, callback):
-    requestCSE("/{}".format(ae), ty["CNT"], {
+
+#Create CNT function
+def createCNT(ae, cnt):
+    return requestCSE("/{}".format(ae), ty["CNT"], {
       "m2m:cnt": {
         "mni": 10, # Max number of instances
         "rn": cnt,
-        "acpi": ["{CSE_NAME}/{ae}/{ACP_NAME}".format(CSE_NAME, ae, ACP_NAME)],
+        "acpi": ["{}/{}/{}".format(CSE_NAME, ae, ACP_NAME)],
       },
-    }, callback, 'C{}'.format(ae))
+    }, 'C{}'.format(ae))
+
 
 #Create CI function
-def createCI(ae, cnt, ciContent, callback):
-    requestCSE("/{}/{}".format(ae, cnt), ty["CI"], {"m2m:cin": {'con': ciContent}}, callback, 'C{}'.format(ae))
+def createCI(ae, cnt, ciContent):
+    return requestCSE("/{}/{}".format(ae, cnt), ty["CI"], {"m2m:cin": {'con': ciContent}}, 'C{}'.format(ae))
 
-#Create CI function
-def createSUB(subscriptor, broadcaster, container, callback):
-    requestCSE("/{}/{}".format(broadcaster, container), ty["SUB"], {
+
+#Create SUB function
+def createSUB(subscriptor, broadcaster, container):
+    return requestCSE("/{}/{}".format(broadcaster, container), ty["SUB"], {
       "m2m:sub": {
         "rn": "SUB_{}".format(subscriptor),
         "nu": ["mqtt://{}/{}?ct=json".format(CSE_NAME, subscriptor)],
@@ -96,6 +101,4 @@ def createSUB(subscriptor, broadcaster, container, callback):
           "net": [3],
         },
       },
-    }, callback, 'C{}'.format(subscriptor))
-
-sys.modules = {createAE, createACP, createCNT, createCI, createSUB}
+    }, 'C{}'.format(subscriptor))
