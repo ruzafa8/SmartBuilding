@@ -5,9 +5,9 @@ const queries = require("./sqlSentences");
 const con = mysql.createConnection({host: dbHost, user: dbUser,password: dbPass});
 
 con.connect(err => {
-    if (err) console.log("There was an error:", err);
+    if (err) console.error("There was an error on database connection:", err);
     else {
-        console.log("Connected!");
+        console.log("Database connected!");
         query(queries.createDB)
             .then(() => query(queries.setDB))
             .then(() => query(queries.createTableUser))
