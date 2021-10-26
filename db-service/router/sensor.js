@@ -17,8 +17,8 @@ router.post('/', (req, res) => {
 router.get('/', async (req, res) => {
     try{
         console.log("Retrieving all the sensor values");
-        const res = await getDetections();
-        res.send(res).status(200);
+        const response = await getDetections();
+        res.send(response).status(200);
     } catch(error) {
         console.error(error);
         res.status(500);
