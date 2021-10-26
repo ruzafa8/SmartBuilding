@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
+const { db_service } = require('../config/database');
 
-const database = (url, method, body) => fetch(`http://localhost:3000/${url}`, {
+const database = (url, method, body) => fetch(`${db_service}/${url}`, {
     method: method, 
     body: body ? JSON.stringify(body) : null
 });
