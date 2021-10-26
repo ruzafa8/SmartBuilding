@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { detect, getDetections } = require('../service/sensor')
 
-// respond with "hello world" when a GET request is made to the homepage
-router.post('/value/add', (req, res) => {
+// Add a value at sensor 
+router.post('/', (req, res) => {
     detect().then(() => {
         console.log("Detection added correctly");
         res.status(201);
@@ -13,9 +13,10 @@ router.post('/value/add', (req, res) => {
     })
 });
 
-router.get('/values', async (req, res) => {
+// retrieve all sensor values stored
+router.get('/', async (req, res) => {
     try{
-        console.log("retrieving all the sensor values");
+        console.log("Retrieving all the sensor values");
         const res = await getDetections();
         res.send(res).status(200);
     } catch(error) {

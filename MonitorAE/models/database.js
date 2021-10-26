@@ -5,7 +5,7 @@ const database = (url, method, body) => fetch(`http://localhost:3000/${url}`, {
     body: body ? JSON.stringify(body) : null
 });
 
-const addDetection = () => database("sensor/value/add","POST");
+const addDetection = () => database("sensor/","POST");
 
 module.exports = {
     addDetection
