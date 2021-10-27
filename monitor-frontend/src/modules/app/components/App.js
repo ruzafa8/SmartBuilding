@@ -4,8 +4,8 @@ import database from '../../../database'
 
 const processDetections = (data, setFrecHours) => {
     const frecHours = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-    data.map(d => new Date(d.AT)).forEach(detection => {
-        frecHours[detection.getHours()]++;
+    data.forEach(detection => {
+        frecHours[new Date(detection.AT).getHours()] = detection.NUM;
     });
     console.log(frecHours); // select count(*), at from sensor group by hour(at);
     setFrecHours(frecHours)
@@ -14,10 +14,14 @@ const processDetections = (data, setFrecHours) => {
 const App = () => {
     const [frecHours, setFrecHours] = useState([]);
     useEffect(() => {
-        console.log("hi")
         database.getSensorDetections(res => {
-            processDetections(res, setFrecHours);
+            //processDetections(res, setFrecHours);
         }, console.error);
+        database.getSensorDetectionsPerHour(res => {
+            processDetections(res,setFrecHours);
+        }, () => {
+            console.log("usted");
+        });
     },[])
 
     return <div>

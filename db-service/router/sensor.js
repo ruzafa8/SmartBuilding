@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { detect, getDetections } = require('../service/sensor')
+const { detect, getDetections, getDetectionsPerHour } = require('../service/sensor')
 
 // Add a value at sensor 
 router.post('/', (req, res) => {
@@ -24,5 +24,16 @@ router.get('/', async (req, res) => {
         res.status(500);
     }
 });
+
+router.post("/perhour", async (req,res) => {
+    try{
+        console.log("Retrieving the sensor values per hour");
+        const response = await getDetectionsPerHour();
+        res.send(response).status(200);
+    } catch(error) {
+        console.error(error);
+        res.status(500);
+    }
+})
 
 module.exports = router;
