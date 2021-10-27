@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import VerticalBar from '../../chart/components/VerticalBar'
 import database from '../../../database'
+import NavBar from './NavBar';
 
 const processDetections = (data, setFrecHours) => {
     const frecHours = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
@@ -10,6 +12,20 @@ const processDetections = (data, setFrecHours) => {
     console.log(frecHours); // select count(*), at from sensor group by hour(at);
     setFrecHours(frecHours)
 }
+
+const Body = styled.div`
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+`
+
+const Box = styled.div`
+    display:flex;
+    width: 75%;
+    
+`;
 
 const App = () => {
     const [frecHours, setFrecHours] = useState([]);
@@ -29,11 +45,12 @@ const App = () => {
         });
     },[])
 
-    return <div>
-        <h1>
-            Welcome 
-        </h1>
-        <VerticalBar values={frecHours}></VerticalBar>
-    </div>
+
+    return <Body>
+        <NavBar/>
+        <Box>
+            <VerticalBar className="chart" values={frecHours}/>
+        </Box>
+    </Body>
 }
 export default App;
