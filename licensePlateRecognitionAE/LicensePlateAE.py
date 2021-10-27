@@ -16,6 +16,8 @@ COMMAND_CONTAINER = "COMMAND"
 CSE_URL = "127.0.0.1:7579"
 CSE_NAME = "Mobius"
 CSE_RELEASE = 3
+MQTT_IP="localhost"
+MQTT_PORT=1883
 
 DOWNLOADED_IMAGE_PATH = "./DownloadedImage"
 
@@ -93,6 +95,6 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect("localhost", 1883, 60)
+client.connect(MQTT_IP, MQTT_PORT, 60)
 
 client.loop_forever()
