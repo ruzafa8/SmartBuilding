@@ -1,7 +1,12 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 
-const data = (values) => ({
+const data = (values) => {
+
+  const max = Math.max.apply(null,values);
+  const colors = values.map(value => `rgba(255, 99, 132, ${value/max})`);
+  
+  return ({
   labels: ['0:00 - 0:59', '1:00 - 1:59', '2:00 - 2:59', '3:00 - 3:59', '4:00 - 4:59'
   , '5:00 - 5:59', '6:00 - 6:59', '7:00 - 7:59', '8:00 - 8:59', '9:00 - 9:59', '10:00 - 10:59'
   , '11:00 - 11:59', '12:00 - 12:59', '13:00 - 13:59', '14:00 - 14:59', '15:00 - 15:59'
@@ -11,16 +16,7 @@ const data = (values) => ({
     {
       label: '# of detections',
       data: values,
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.1)', 'rgba(255, 99, 132, 0.4)','rgba(255, 99, 132, 0.8)',
-        'rgba(255, 99, 132, 0.12)','rgba(255, 99, 132, 0.16)','rgba(255, 99, 132, 0.20)',
-        'rgba(255, 99, 132, 0.24)','rgba(255, 99, 132, 0.28)','rgba(255, 99, 132, 0.32)',
-        'rgba(255, 99, 132, 0.36)','rgba(255, 99, 132, 0.40)','rgba(255, 99, 132, 0.44)',
-        'rgba(255, 99, 132, 0.48)','rgba(255, 99, 132, 0.52)','rgba(255, 99, 132, 0.56)',
-        'rgba(255, 99, 132, 0.60)','rgba(255, 99, 132, 0.64)','rgba(255, 99, 132, 0.68)',
-        'rgba(255, 99, 132, 0.72)','rgba(255, 99, 132, 0.76)','rgba(255, 99, 132, 0.80)',
-        'rgba(255, 99, 132, 0.84)','rgba(255, 99, 132, 0.88)',
-      ],
+      backgroundColor: colors,
       borderColor: [
         'rgba(255, 99, 132, 1)'
       ],
@@ -28,7 +24,7 @@ const data = (values) => ({
     },
   ],
 });
-
+}
 const options = {
   scales: {
     yAxes: [

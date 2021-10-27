@@ -40,5 +40,5 @@ const config = (method, body) => {
 export const appFetch = (path, method, body, onSuccess, onErrors) => {
     fetch(`http://localhost:3001${path}`, config(method, body))
         .then(response => handleResponse(response, onSuccess, onErrors))
-        .catch(console.error);
+        .catch(onErrors);
 }
