@@ -11,7 +11,9 @@ import ANPRnoRestart as ANPR
 # GLOBAL VARIABLES
 ACP_NAME = "MYACP"
 AE_NAME = "LicensePlateRecog"
-DATA_CONTAINER = "DATA_license"
+DESCRIPTION = "This is a neuronal network for number-plate recognition"
+DESC_CONTAINER = "DESCRIPTOR"
+DATA_CONTAINER = "DATA"
 COMMAND_CONTAINER = "COMMAND"
 CSE_URL = "127.0.0.1:7579"
 CSE_NAME = "Mobius"
@@ -40,7 +42,7 @@ def registerAE(ae, acp, cntDescription, description, cntData, cntCommand):
 
 
 # Creates AE entity and containers inside
-registerAE(AE_NAME, ACP_NAME, "DESCRIPTOR", "This is a neuronal network for number-plate recognition", DATA_CONTAINER, COMMAND_CONTAINER)
+registerAE(AE_NAME, ACP_NAME, DESC_CONTAINER, DESCRIPTION, DATA_CONTAINER, COMMAND_CONTAINER)
 
 # Executes a null recognition to load all the drivers
 ANPR.runDetection(export=False)
