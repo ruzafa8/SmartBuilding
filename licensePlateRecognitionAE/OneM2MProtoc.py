@@ -3,8 +3,8 @@ import requests
 import json
 
 # GLOBAL VARIABLES
-ACP_NAME = "MYACP"
-CSE_URL = "127.0.0.1:7579"
+ACP_NAME = None ### NEED TO SPECIF IN ARCHIVE
+CSE_URL = None ### NEED TO SPECIFY IN ARCHIVE
 CSE_NAME = "Mobius"
 CSE_RELEASE = 3
 

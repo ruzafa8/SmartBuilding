@@ -6,7 +6,6 @@ import os
 
 import OneM2MProtoc as module
 
-from requests.api import head
 import ANPRnoRestart as ANPR
 
 # GLOBAL VARIABLES
@@ -20,9 +19,13 @@ CSE_RELEASE = 3
 
 DOWNLOADED_IMAGE_PATH = "./DownloadedImage"
 
+### Config the global variables in module
+module.CSE_URL = CSE_URL
+module.ACP_NAME = ACP_NAME
+
 
 # Function for creating the LicensePlateRecog AE with all its containers
-def registerAE(ae, acp, cntDescription, description, cntData, cntCommand, commandSub, dataSub):
+def registerAE(ae, acp, cntDescription, description, cntData, cntCommand):
     
     module.createAE(ae)
     module.createACP(ae, acp)
@@ -30,36 +33,12 @@ def registerAE(ae, acp, cntDescription, description, cntData, cntCommand, comman
     module.createCI(ae, cntDescription, description)
     module.createCNT(ae, cntData)
     module.createCNT(ae, cntCommand)
-    module.createSUB(commandSub, ae, cntCommand)
-    module.createSUB(dataSub, ae, cntData)
-
-
-
-#/////////////////DO NOT USE, JUST FOR DEVELOPING/////////////////////
-
-# def requestCSE (url, ty, body, callback, originator ):
-
-#     Headers = {
-#       "Content-Type": "application/json;ty={}".format(ty),
-#       "X-M2M-Origin": originator,
-#       "X-M2M-RVI": "{}".format(CSE_RELEASE),
-#       "X-M2M-RI": "req0",
-#       'Connection': "close"
-#     }
-
-#     r = requests.post('http://{}/{}{}'.format(CSE_URL, CSE_NAME, url), headers=Headers, data=json.dumps(body))
-#     callback(r)
-
-# def createCI(ae, cnt, ciContent, callback):
-#     requestCSE("/{}/{}".format(ae, cnt), 4, {"m2m:cin": {'con': ciContent}}, callback, 'C{}'.format(ae))
-
-#//////////////////////////////////////////////////////////////////
-
+    module.createSUB(ae, ae, cntCommand)
 
 
 
 # Creates AE entity and containers inside
-registerAE(AE_NAME, ACP_NAME, "DESCRIPTOR", "This is a neuronal network for number-plate recognition", DATA_CONTAINER, COMMAND_CONTAINER, "Command", "License")
+registerAE(AE_NAME, ACP_NAME, "DESCRIPTOR", "This is a neuronal network for number-plate recognition", DATA_CONTAINER, COMMAND_CONTAINER)
 
 # Executes a null recognition to load all the drivers
 ANPR.runDetection(export=False)
@@ -72,7 +51,7 @@ def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
 
     # Subscribe to the corresponding topic
-    client.subscribe("/oneM2M/req/Mobius2/Command/json")
+    client.subscribe("/oneM2M/req/Mobius2/{}/json".format(AE_NAME))
 
 
 
