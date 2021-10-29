@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components'
 
 const NavBarStyled = styled.div`
@@ -18,7 +19,7 @@ const NavBarStyled = styled.div`
 
 const NavBar = () => <NavBarStyled>
     <ul>
-        <li>Sensor</li>
+        <li><Link to="/sensor">Sensor</Link></li>
         <li>Camera</li>
         <li>Admision List</li>
     </ul>
