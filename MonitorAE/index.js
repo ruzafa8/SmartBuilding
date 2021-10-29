@@ -7,6 +7,7 @@ const processData = require('./controller/controller');
 cse.registerModule(AE_NAME, true, `NAME=${AE_NAME}`,'0').then(() => {
     // subscriptions
     cse.registerSubscription(AE_NAME, "ProximitySensor", "DATA");
+    cse.registerSubscription(AE_NAME, "Camera", "DATA");
 });
 
 onMessage(async (topic, message) => {
