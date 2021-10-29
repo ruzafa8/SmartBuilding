@@ -1,28 +1,39 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components'
+import { Link, NavLink } from 'react-router-dom';
+import styled from 'styled-components';
+import Logo from '../../../logo.png';
 
 const NavBarStyled = styled.div`
-    background-color:#D3D3D3;
-    display:flex;
+    background-color:#ebfbfa;
     width:100%;
-    & > ul {
+    & > div {
+        align-items:center;
         display:flex;
-        list-style:none;
-    }
-
-    & > ul > li {
-        padding:0px 10px;
-
     }
 `
 
-const NavBar = () => <NavBarStyled>
-    <ul>
-        <li><Link to="/sensor">Sensor</Link></li>
-        <li>Camera</li>
-        <li>Admision List</li>
-    </ul>
-</NavBarStyled>
+const Icon = styled.img`
+    padding:0px;
+    margin-left:20px;
+    margin-right:10px;
+    width:60px;
+    height:40px;
+`
 
+const StyledLink = styled(NavLink)`
+    padding: 20px 10px;
+    color:#53c5bf;
+    text-decoration: none; /* no underline */
+`
+
+const NavBar = () => {
+    return <NavBarStyled>
+        <div>
+            <Link to="/"><Icon src={Logo}/></Link>
+            <StyledLink to="/sensor" activeStyle={{backgroundColor:"#53c5bf", color:"#ebfbfa"}}>Sensor</StyledLink>
+            <StyledLink to="/camera" activeStyle={{backgroundColor:"#53c5bf", color:"#ebfbfa"}}>Camera</StyledLink>
+            <StyledLink to="/admision" activeStyle={{backgroundColor:"#53c5bf", color:"#ebfbfa"}}>Admision List</StyledLink>
+        </div>
+    </NavBarStyled>
+}
 export default NavBar
