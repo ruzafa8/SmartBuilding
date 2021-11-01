@@ -59,7 +59,7 @@ StaticJsonDocument<1024> doc;
 const long interval = 10000;
 long currentMillis;
 int SERIAL_SPEED  = 115200;
-int isYellow;
+int isYellow = 0;
 
 WiFiClient client1;
 String context = "";        // The targeted actuator
@@ -406,16 +406,18 @@ void setup() {
   init_Semaphore();
   //set SUBs
   //originator = "CSemaphore";
-
+  pinMode(GREEN_PIN, OUTPUT);
+  pinMode(YELLOW_PIN, OUTPUT);
+  pinMode(RED_PIN, OUTPUT);
 }
 
 // Main loop of the µController
 void loop() {
-  
-  if(isYellow==1) {
+  if(isYellow == 1) {
     digitalWrite(YELLOW_PIN,HIGH);
-    delay(500);
+    delay(420);
     digitalWrite(YELLOW_PIN,LOW);
+    delay(420);
   }
   
    if (!client.connected()) {
