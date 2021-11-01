@@ -368,8 +368,11 @@ void callback(char* topic, byte* payload, unsigned int length) {
   if(data != NULL){                                            //CAMBIAR POR CADA AE NUEVO
     if(data == "open") {                                                             //CAMBIAR POR CADA AE NUEVO
       stepper.step(500);
+      createCI("Motor",DATA_CNT_NAME,"opened");
+      
       delay(1000);
       stepper.step(-500);
+      createCI("Motor",DATA_CNT_NAME,"closed");
   }
   }
 }
