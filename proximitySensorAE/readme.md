@@ -13,3 +13,16 @@ Is the proximity sensor that detects if there is a car that wants to enter throu
 ![Breadboard schematics](/proximitySensorAE/proximitySensor_schematic.png)
 
 ## Software set up
+You must change the value of these variables to those of your devices and services:
+
+WIFI_SSID      // Configure here the SSID of your WiFi Network
+
+WIFI_PSWD      // Configure here the password of your WiFi Network
+
+mqtt_server    // ip of your mqtt server
+
+CSE_IP         // Configure here the IP Address of your oneM2M CSE
+
+CSE_HTTP_PORT  // Configure here the port of your oneM2M CSE
+
+CSE_NAME       // Configure here the name of your oneM2M CSE
