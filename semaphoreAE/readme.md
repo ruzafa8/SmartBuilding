@@ -13,6 +13,6 @@ The light will be yellow while the license plate is being processed or when the 
 5. 1 green led
 
 ## Hardware set up
-![Breadboard schematics](/SemaphoreAE/Semaphore_schematic.png)
+![Breadboard schematics](/SemaphoreAE/semaphore_schematic.png)
 
 ## Software set up
