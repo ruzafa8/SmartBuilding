@@ -19,8 +19,13 @@ The light will be yellow while the license plate is being processed or when the 
 You must change the value of these variables to those of your devices and services:
 
 WIFI_SSID      // Configure here the SSID of your WiFi Network
+
 WIFI_PSWD      // Configure here the password of your WiFi Network
+
 mqtt_server    // ip of your mqtt server
+
 CSE_IP         // Configure here the IP Address of your oneM2M CSE
+
 CSE_HTTP_PORT  // Configure here the port of your oneM2M CSE
+
 CSE_NAME       // Configure here the name of your oneM2M CSE
