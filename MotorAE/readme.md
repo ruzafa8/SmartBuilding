@@ -1,5 +1,5 @@
 [back](https://github.com/ruzafa8/SmartBuilding)
-# Semaphore AE
+# MOTOR AE
 ## Description
 Is the motor 
 # How to deploy it
