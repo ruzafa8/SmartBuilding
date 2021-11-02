@@ -1,6 +1,6 @@
 [back](https://github.com/ruzafa8/SmartBuilding)
 # Proximity Sensor AE
-## Introduction
+## Description
 Is the proximity sensor that detects if there is a car that wants to enter through the parking door, if it detects, it notifies the camera to take a picture of the front of the car.
 
 # How to deploy it
