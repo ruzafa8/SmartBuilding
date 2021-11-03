@@ -4,4 +4,4 @@ export const getSensorDetections = (onSuccess, onErrors) =>
     appFetch('/sensor',"GET",undefined, onSuccess,onErrors);
 
 export const getSensorDetectionsPerHour = (onSuccess, onErrors) => 
-    appFetch('/sensor/perhour', "POST", undefined, onSuccess, onErrors);
+    appFetch('/sensor?by=hour', "GET", undefined, onSuccess, onErrors);

@@ -1,6 +1,6 @@
 const monitorService = require("../services/monitor");
 const cseService = require('../services/cse');
-const dbService = require('../services/database');
+const dbService = require('../models/database');
 
 const processData = (originator, data) => {
     switch(originator) {
@@ -18,6 +18,7 @@ const processData = (originator, data) => {
 
             } else {
                 const belong = dbService.checkPlate(data);
+                console.log("The plate belongs = ", belong);
                 cseService.instanciate("Semaphore", "COMMAND", belong ?  "yellow" : "red");
             }
     }
