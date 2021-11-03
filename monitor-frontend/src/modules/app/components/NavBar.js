@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import Logo from '../../../logo.png';
+import Logo from '../../../logo.jpeg';
 
 const NavBarStyled = styled.div`
     background-color:#ebfbfa;
@@ -17,7 +17,7 @@ const Icon = styled.img`
     margin-left:20px;
     margin-right:10px;
     width:60px;
-    height:40px;
+    height:55px;
 `
 
 const StyledLink = styled(NavLink)`
