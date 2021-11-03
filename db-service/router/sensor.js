@@ -3,6 +3,7 @@ const router = express.Router();
 const { detect, getDetections, getDetectionsPerHour } = require('../service/sensor')
 
 // Add a value at sensor 
+// POST /sensor/add
 router.post('/add', (req, res) => {
     detect().then(() => {
         console.log("Detection added correctly");
@@ -14,6 +15,8 @@ router.post('/add', (req, res) => {
 });
 
 // retrieve all sensor values stored
+// GET /sensor
+// GET /sensor?by=hour
 router.get('/', async (req, res) => {
     try{
         if(!req.query.by) {

@@ -12,6 +12,8 @@ con.connect(err => {
             .then(() => query(queries.setDB))
             .then(() => query(queries.createTableUser))
             .then(() => query(queries.createTableSensor))
+            .then(() => query(queries.createTableDetections))
+            .then(() => query(queries.initialTableDetections))
     }
 });
 

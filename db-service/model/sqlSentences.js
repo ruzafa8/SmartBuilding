@@ -12,4 +12,12 @@ module.exports = {
         ID INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
         AT DATETIME
     ) ENGINE=InnoDB;`,
+    createTableDetections: `CREATE TABLE IF NOT EXISTS DETECTIONS (
+        ID INT PRIMARY KEY,
+        TRUE_DETECTION INT NOT NULL,
+        FALSE_DETECTION INT NOT NULL,
+        BELONG INT NOT NULL,
+        NOT_BELONG INT NOT NULL
+    ) ENGINE=InnoDB;`,
+    initialTableDetections: `INSERT IGNORE INTO DETECTIONS VALUES (0,0,0,0,0)`
 }

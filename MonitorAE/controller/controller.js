@@ -15,9 +15,13 @@ const processData = (originator, data) => {
         case "LicensePlateRecog":
             console.log("License Plate Recognition AE detected this plate:", data);
             if(data == "none") {
-
+                dbService.detectedFalse();
             } else {
+                dbService.detectedTrue();
                 const belong = dbService.checkPlate(data);
+                if(belong) dbService.detectedBelong();
+                else dbService.detectedNotBelong();
+                
                 console.log("The plate belongs = ", belong);
                 cseService.instanciate("Semaphore", "COMMAND", belong ?  "yellow" : "red");
             }
