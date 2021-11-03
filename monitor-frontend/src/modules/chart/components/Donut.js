@@ -8,12 +8,12 @@ const d = ({labels,data}) => ({
       label: '# of Votes',
       data,
       backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)'
+        'rgba(83, 197, 191, 1)',
+        'rgba(197, 64, 89, 1)'
       ],
       borderColor: [
-        'rgba(255, 99, 132, 1)',
-        'rgba(54, 162, 235, 1)'
+        'rgba(83, 197, 191, 1)',
+        'rgba(197, 89, 89, 1)'
       ],
       borderWidth: 1,
     },
