@@ -10,24 +10,16 @@ const signIn = (user, plate, password) => {
     })
 }
 
-const checkPlate = plate => isPlate(plate)
-    .then(JSON.stringify)
-    .then(JSON.parse)
-    .then(res => res[0]['COUNT(*)'] == 1)
-    .catch(err => {
+const checkPlate = plate => isPlate(plate).then(JSON.stringify).then(JSON.parse)
+    .then(res => res[0]['COUNT(*)'] == 1).catch(err => {
         console.error(err);
         return false;
     });
 
-
-const logIn = (user, password) => {
-    getUser(user).then(console.log).catch(console.error);
-}
-
-const acceptPlate = id => {
-    accept(id).then(console.log).catch(console.error);
-}
+const logIn = (user, password) => getUser(user).then(console.log).catch(console.error);
+const acceptPlate = id => accept(id).then(console.log).catch(console.error);
+const uncheckedListUsers = () => uncheckedList().then(JSON.stringify).then(JSON.parse)
 
 module.exports = {
-    signIn, checkPlate, logIn, acceptPlate
+    signIn, checkPlate, logIn, acceptPlate, uncheckedListUsers
 }
