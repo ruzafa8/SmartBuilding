@@ -301,7 +301,7 @@ void init_ProximitySensor(){
   String initialDescription = "Name=ProximitySensor;Location=Parking";
   String initialData = "0";
   originator = "CProximitySensor";
-  registerModule("ProximitySensor", true, initialDescription, initialData);
+  registerModule("ProximitySensor", false, initialDescription, initialData);
 }
 
 
