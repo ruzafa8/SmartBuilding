@@ -22,7 +22,7 @@ const Icon = styled.img`
 
 const StyledLink = styled(NavLink)`
     padding: 20px 10px;
-    color:#53c5bf;
+    color:#34898d;
     text-decoration: none; /* no underline */
 `
 
@@ -32,6 +32,7 @@ const NavBar = () => {
             <Link to="/"><Icon src={Logo}/></Link>
             <StyledLink to="/sensor" activeStyle={{backgroundColor:"#53c5bf", color:"#ebfbfa"}}>Sensor</StyledLink>
             <StyledLink to="/camera" activeStyle={{backgroundColor:"#53c5bf", color:"#ebfbfa"}}>Camera</StyledLink>
+            <StyledLink to="/neuronal-network" activeStyle={{backgroundColor:"#53c5bf", color:"#ebfbfa"}}>Neuronal Network</StyledLink>
             <StyledLink to="/admision" activeStyle={{backgroundColor:"#53c5bf", color:"#ebfbfa"}}>Admision List</StyledLink>
         </div>
     </NavBarStyled>

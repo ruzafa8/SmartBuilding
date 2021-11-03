@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import VerticalBar from '../../chart/components/VerticalBar'
+import { VerticalBar } from '../../chart'
 import database from '../../../database'
+
 const Box = styled.div`
     display:flex;
     width: 75%;
-    
 `;
 
 const processDetections = (data, setFrecHours) => {
@@ -13,7 +13,7 @@ const processDetections = (data, setFrecHours) => {
     data.forEach(detection => {
         frecHours[new Date(detection.AT).getHours()] = detection.NUM;
     });
-    console.log(frecHours); // select count(*), at from sensor group by hour(at);
+    // select count(*), at from sensor group by hour(at);
     setFrecHours(frecHours)
 }
 
@@ -36,7 +36,7 @@ const Sensor = () =>{
     },[])
     
     return <Box>
-<VerticalBar className="chart" values={frecHours}/>
-</Box>
+        <VerticalBar className="chart" values={frecHours}/>
+    </Box>
 }
 export default Sensor;

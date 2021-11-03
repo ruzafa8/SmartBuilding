@@ -1,1 +1,0 @@
-export { default as Sensor } from './components/Sensor';
