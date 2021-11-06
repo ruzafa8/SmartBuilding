@@ -7,7 +7,7 @@ const database = (url, method, body) => fetch(`${db_service}${url}`, {
 });
 
 const addDetection = () => database("/sensor/add","POST");
-const checkPlate = () => database("/user/check/", "POST").then(console.log);
+const checkPlate = plate => database("/user/check", "POST", {plate}).then(console.log);
 const detectedFalse = () => database("/detections/increment?type=false_detection", "POST")
 const detectedTrue = () => database("/detections/increment?type=true_detection", "POST")
 const detectedBelong = () => database("/detections/increment?type=belong", "POST")

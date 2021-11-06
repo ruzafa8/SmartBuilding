@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { ThemeContext } from 'styled-components';
 import Logo from '../../../logo.jpeg';
 
 const NavBarStyled = styled.div`
-    background-color:#ebfbfa;
+    background-color:${({theme}) => theme.p_light};
     width:100%;
     & > div {
         align-items:center;
@@ -22,18 +22,19 @@ const Icon = styled.img`
 
 const StyledLink = styled(NavLink)`
     padding: 20px 10px;
-    color:#34898d;
+    color:${({theme}) => theme.p_dark};
     text-decoration: none; /* no underline */
 `
 
 const NavBar = () => {
+    const theme = useContext(ThemeContext);
     return <NavBarStyled>
         <div>
             <Link to="/"><Icon src={Logo}/></Link>
-            <StyledLink to="/sensor" activeStyle={{backgroundColor:"#53c5bf", color:"#ebfbfa"}}>Sensor</StyledLink>
-            <StyledLink to="/camera" activeStyle={{backgroundColor:"#53c5bf", color:"#ebfbfa"}}>Camera</StyledLink>
-            <StyledLink to="/neuronal-network" activeStyle={{backgroundColor:"#53c5bf", color:"#ebfbfa"}}>Neuronal Network</StyledLink>
-            <StyledLink to="/admision" activeStyle={{backgroundColor:"#53c5bf", color:"#ebfbfa"}}>Admision List</StyledLink>
+            <StyledLink to="/sensor" activeStyle={{backgroundColor:theme.primary, color:theme.p_text}}>Sensor</StyledLink>
+            <StyledLink to="/camera" activeStyle={{backgroundColor:theme.primary, color:theme.p_text}}>Camera</StyledLink>
+            <StyledLink to="/neuronal-network" activeStyle={{backgroundColor:theme.primary, color:theme.p_text}}>Neuronal Network</StyledLink>
+            <StyledLink to="/admision" activeStyle={{backgroundColor:theme.primary, color:theme.p_text}}>Admision List</StyledLink>
         </div>
     </NavBarStyled>
 }

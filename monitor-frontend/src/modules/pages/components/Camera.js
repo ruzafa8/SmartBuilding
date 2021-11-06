@@ -8,8 +8,8 @@ import styled from 'styled-components'
 import Logo from '../../../logo.png';
 
 const Image = styled.img`
-    width:242px;
-    margin:10px;
+    width:18%;
+    margin:1%;
 `
 const Photo = ({url}) => <Item
     original={url}
@@ -25,7 +25,7 @@ const MyGallery = () => {
   return <>
     <CustomGallery layoutRef={layoutRef} ui={PhotoswipeUIDefault}>
         <div style={{display:"flex",flexWrap:"wrap"}}>{
-        Array.from({ length:10}, (_, i) => `http://192.168.0.33/${i}.jpg`)
+        Array.from({ length:10}, (_, i) => `http://192.168.31.232/${i}.jpg`)
             .map(url => <Photo url={url}/>)
     }</div>
     </CustomGallery>

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import logo from '../../../logo.jpeg'
 
 const Body = styled.div`
-    background-color:#ebfbfa;
+    background-color:${({theme}) => theme.p_light};
     height:100%;
 `
 

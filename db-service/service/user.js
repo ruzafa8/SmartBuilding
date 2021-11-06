@@ -1,4 +1,4 @@
-const { createUser, getUser, isPlate, accept, uncheckedList} = require('../model/user');
+const { createUser, getUser, isPlate, userList, updateUser, deleteUser} = require('../model/user');
 
 const signIn = (user, plate, password) => {
     createUser(user,plate,password).then(res => {
@@ -11,15 +11,14 @@ const signIn = (user, plate, password) => {
 }
 
 const checkPlate = plate => isPlate(plate).then(JSON.stringify).then(JSON.parse)
-    .then(res => res[0]['COUNT(*)'] == 1).catch(err => {
-        console.error(err);
-        return false;
-    });
+    .then(res => ({belongs:res[0]['COUNT(*)'] == 1, id: res[0].id}));
 
 const logIn = (user, password) => getUser(user).then(console.log).catch(console.error);
-const acceptPlate = id => accept(id).then(console.log).catch(console.error);
-const uncheckedListUsers = () => uncheckedList().then(JSON.stringify).then(JSON.parse)
+const listUsers = () => userList().then(JSON.stringify).then(JSON.parse)
+
+const userUpdate = (id, verified) => updateUser(id, verified).then(console.log).catch(console.error);
+const userDelete = id => deleteUser(id).then(console.log).catch(console.error);
 
 module.exports = {
-    signIn, checkPlate, logIn, acceptPlate, uncheckedListUsers
+    signIn, checkPlate, logIn, listUsers, userUpdate, userDelete
 }
