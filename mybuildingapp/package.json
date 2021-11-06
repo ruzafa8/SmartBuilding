@@ -1,0 +1,48 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.15.9",
+    "@react-native-community/checkbox": "^0.5.9",
+    "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-picker/picker": "^2.1.0",
+    "@react-navigation/drawer": "^6.1.8",
+    "@react-navigation/native": "^6.0.6",
+    "@react-navigation/native-stack": "^6.2.5",
+    "@react-navigation/stack": "^6.0.11",
+    "ewelink-api": "^3.1.1",
+    "expo": "~43.0.0",
+    "expo-status-bar": "~1.1.0",
+    "fs": "0.0.1-security",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-native": "0.64.2",
+    "react-native-flash-message": "^0.2.0",
+    "react-native-gesture": "^0.2.0",
+    "react-native-gesture-handler": "~1.10.2",
+    "react-native-modal-picker": "0.0.16",
+    "react-native-modal-selector": "^2.1.0",
+    "react-native-reanimated": "~2.2.0",
+    "react-native-restart": "0.0.22",
+    "react-native-safe-area-context": "3.3.2",
+    "react-native-screens": "~3.8.0",
+    "react-native-select-multiple": "^2.1.0",
+    "react-native-vega-scroll-list": "^1.0.0",
+    "react-native-web": "0.17.1",
+    "react-navigation": "^4.4.4",
+    "react-navigation-stack": "^2.10.4",
+    "rn-checkbox-list": "^1.1.0",
+    "watchman": "^1.0.0",
+    "ws": "^8.2.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9"
+  },
+  "private": true
+}
