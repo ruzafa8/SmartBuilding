@@ -59,8 +59,8 @@ function LogInScreen({ navigation }) {
           }
         } else {
           Alert.alert(
-            "Username or password were incorrect",
-            "Either the username or the password weren't correct, please make sure they are correct and that you're already registered"
+            "Username or password were incorrect or user isn't verified",
+            "Either the username or the password weren't correct, please make sure they are correct and that you're already registered. Also make sure that it's verified"
           );
         }
       });
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     width: "80%",
-    backgroundColor: "#fb5b5a",
+    backgroundColor: colors.primary,
     borderRadius: 25,
     height: 50,
     alignItems: "center",
@@ -250,10 +250,10 @@ const styles = StyleSheet.create({
     //bottom: 20,
     fontFamily: "NewYork",
     fontSize: fontSize(20),
-    backgroundColor: "rgba(255, 102, 99, 0.7)",
+    backgroundColor: colors.p_light,
   },
   inputCode: {
-    backgroundColor: colors.white,
+    //backgroundColor: "red",
     width: "65%",
     height: 50,
     borderRadius: 25,

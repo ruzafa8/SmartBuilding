@@ -30,7 +30,7 @@ const ListItems = () => {
       return new Promise((resolve, reject) => {
         execWS(4, { ewemail: username, ewpassword: password }).then(
           (devices) => {
-            //console.log(devices[0]);
+            //console.log(devices.data);
             resolve(devices);
           }
         );

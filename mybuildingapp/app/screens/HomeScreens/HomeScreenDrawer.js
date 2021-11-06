@@ -5,7 +5,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import HomeScreen from "./Welcome";
 import HomeScreenEwe from "./Ewelink";
-import About from "./About";
+import ElevatorControl from "./ElevatorControl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ConnectingScreen from "../connectingScreen";
 
@@ -39,11 +39,16 @@ const HomeScreenDrawer = (props) => {
           component={HomeScreenEwe}
           options={{ headerLeftLabelVisible: false }}
         />
-        <Drawer.Screen name="About" component={About} />
+        <Drawer.Screen name="Elevator control" component={ElevatorControl} />
       </Drawer.Navigator>
     );
   } else if (dra == 0) {
-    return <HomeScreen />;
+    return (
+      <Drawer.Navigator initialRouteName={"Home"} backBehavior={"none"}>
+        <Drawer.Screen name="Home" component={HomeScreen} />
+        <Drawer.Screen name="Elevator control" component={ElevatorControl} />
+      </Drawer.Navigator>
+    );
   }
 };
 

@@ -13,6 +13,8 @@ import ModalSelector from "react-native-modal-selector";
 import execWS from "../services/wsConnection";
 import { showMessage } from "react-native-flash-message";
 
+import colors from "../colors/colors";
+
 const fontSize = (font) => {
   return Platform.OS == "ios" ? font + 8 : font;
 };
@@ -145,7 +147,7 @@ const RegisterScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar backgroundColor={"#BEBEBE"} />
+      <StatusBar backgroundColor="white" />
       <View style={styles.registrationTextView}>
         <Text style={styles.registrationText}>REGISTRATION HERE</Text>
       </View>
@@ -270,7 +272,7 @@ const RegisterScreen = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: "#BEBEBE" },
+  safeArea: { flex: 1, backgroundColor: "white" },
   registrationTextView: {
     flex: 0.15,
     alignItems: "center",
@@ -293,7 +295,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(255, 102, 99, 0.7)",
+    backgroundColor: colors.primary,
   },
   submitBtnView: {
     flex: 0.1,
@@ -341,7 +343,7 @@ const styles = StyleSheet.create({
     //bottom: 20,
     fontFamily: "NewYork",
     fontSize: fontSize(20),
-    backgroundColor: "rgba(255, 102, 99, 0.7)",
+    backgroundColor: colors.p_light,
   },
 });
 

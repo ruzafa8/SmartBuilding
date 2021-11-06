@@ -6,6 +6,7 @@ const PS = {
   registration: 3,
   getDevices: 4,
   updateConfig: 5,
+  setFloor: 6,
 };
 
 function connect(ip = IP) {
@@ -23,6 +24,7 @@ function execWS(
     ewpassword: null,
     id: null,
     devicesON: null,
+    floorNumber: null,
   }
 ) {
   return new Promise((resolve, reject) => {
@@ -136,6 +138,22 @@ function execWS(
             resolve(m);
           };
         };
+        break;
+
+      case PS.setFloor:
+        const floor = data.floorNumber;
+        ws.onopen = () => {
+          ws.send(
+            JSON.stringify({
+              type: "setFloor",
+              floorNumber: floor,
+            })
+          )
+
+          ws.onmessage = (m) => {
+            resolve(m)
+          }
+        }
         break;
     }
   });

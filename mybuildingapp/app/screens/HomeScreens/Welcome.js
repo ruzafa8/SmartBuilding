@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   welcomText: { fontFamily: "NewYork", fontSize: 30 },
   logOutBtn: {
     width: "80%",
-    backgroundColor: "#fb5b5a",
+    backgroundColor: colors.primary,
     borderRadius: 25,
     height: 50,
     alignItems: "center",
