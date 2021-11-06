@@ -2,10 +2,7 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
-
-#define GREEN_PIN      D2
-#define YELLOW_PIN     D1
-#define RED_PIN        D0
+#include <Stepper.h>
 
 
 ///////////////Parameters & Constants/////////////////
@@ -17,8 +14,8 @@ const char* mqtt_server = "192.168.31.214";
 
 // oneM2M : CSE params
 String CSE_IP      = "192.168.31.214"; //Configure here the IP Address of your oneM2M CSE
-int   CSE_HTTP_PORT = 7579;
-String CSE_NAME    = "Mobius";
+int   CSE_HTTP_PORT = 7599;
+String CSE_NAME    = "rosemary";
 String CSE_RELEASE = "3"; //Configure here the release supported by your oneM2M CSE
 bool ACP_REQUIRED = true; //Configure here whether or not ACP is required controlling access
 String ACPID = "";
@@ -33,7 +30,7 @@ int TY_AE  = 2;
 int TY_CNT = 3;
 int TY_CI  = 4;
 int TY_SUB = 23;
-String originator = "CSemaphore";
+String originator = "CElevator_Motor";
 
 // HTTP constants
 int LOCAL_PORT = 80;
@@ -52,6 +49,16 @@ StaticJsonDocument<1024> doc;
 
 //MISC
 #define DEBUG
+#define STEPS  2048  // number of steps per one revolution is 2048 ( = 4096 half steps)
+
+// stepper motor control pins
+#define IN1   D0
+#define IN2   D1
+#define IN3   D2
+#define IN4   D3
+
+// initialize stepper library
+Stepper stepper(STEPS, IN4, IN2, IN3, IN1);
 
 ///////////////////////////////////////////
 
@@ -59,7 +66,7 @@ StaticJsonDocument<1024> doc;
 const long interval = 10000;
 long currentMillis;
 int SERIAL_SPEED  = 115200;
-int isYellow = 0;
+long currentFloor;
 
 WiFiClient client1;
 String context = "";        // The targeted actuator
@@ -315,11 +322,20 @@ void reconnect() {
       //client.publish("outTopic", "hello world");
       // ... and resubscribe
       //client.subscribe("#");
-      String s = "/oneM2M/+/Mobius2/" + originator + "/#";
+      String s = "/oneM2M/+/" + originator + "/+/#";
       char topic[50]; 
       s.toCharArray(topic, 50);
       client.subscribe(topic); 
 
+      s = "/oneM2M/resp/" + originator + "/+/#";
+      char topic2[50];
+      s.toCharArray(topic2, 50);
+      client.subscribe(topic2);
+
+      s = "/oneM2M/req/+/" + originator + "/#";
+      char topic3[50];
+      s.toCharArray(topic3, 50);
+      client.subscribe(topic3);
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -354,68 +370,71 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Recived: " + data);
   Serial.println();
 
-  if(data != NULL){                                            //CAMBIAR POR CADA AE NUEVO
-    if(data == "red") {                                                             //CAMBIAR POR CADA AE NUEVO
-      isYellow = 0;
-      Serial.println("a");
-      digitalWrite(GREEN_PIN,LOW);
-      digitalWrite(YELLOW_PIN,LOW); 
-      digitalWrite(RED_PIN,HIGH);                                                   //CAMBIAR POR CADA AE NUEVO
-    } else if(data == "green") {                             //CAMBIAR POR CADA AE NUEVO
-      isYellow = 0;
-      digitalWrite(YELLOW_PIN,LOW);
-      digitalWrite(GREEN_PIN,HIGH);                        //CAMBIAR POR CADA AE NUEVO
-      digitalWrite(RED_PIN,LOW);
-    }else if(data=="yellow"){
-      isYellow = 1;
-      digitalWrite(RED_PIN,LOW);
-      digitalWrite(GREEN_PIN,LOW);
+  if(data != NULL){                                            
+    if(data != "") {                                                             
+      long floor = data.toInt();
+      long diff= floor - currentFloor;
+      Serial.println(diff);
+      Serial.println("DIFF");
+      Serial.println(floor);
+      Serial.println("l");
+      currentFloor=floor;
+      createCI("Elevator_Motor", DATA_CNT_NAME,String(currentFloor));
+      if(diff>0){
+          for(int i = 0; i < diff; i++){
+            stepper.step( 500 );
+            yield();
+          }
+      }else if(diff<0){
+        for(int i = 0; i > diff; i--){
+           stepper.step( -500 );
+           yield();
+         }
+     }
     }
   }
 
 }
 
-void init_Semaphore(){
-  String initialDescription = "Name=Semaphore;Location=Parking";
-  String initialData = "red";
-  originator = "CSemaphore";
-  registerModule("Semaphore", true, initialDescription, initialData);
+void init_Elevator_Motor(){
+  String initialDescription = "Name=Elevator_Motor;Location=Elevator";
+  String initialData = "0";
+  originator = "CElevator_Motor";
+  registerModule("Elevator_Motor", true, initialDescription, initialData);
 }
 
 
 void setup() {
+  
   // intialize the serial liaison
-  Serial.begin(SERIAL_SPEED);
+  Serial.begin(SERIAL_SPEED); 
+
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  
+  // Connect to WiFi network
+  init_WiFi();
+  
+  // set stepper motor speed to 10rpm
+  stepper.setSpeed(10); 
+  
+  currentFloor=0;
+
   //Set up mqtt client
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
   client.setBufferSize(1024);
-
-  // Connect to WiFi network
-  init_WiFi();
-
+  
   // register sensors and actuators
-  init_Semaphore();
-  //set SUBs
-  //originator = "CSemaphore";
-  pinMode(GREEN_PIN, OUTPUT);
-  pinMode(YELLOW_PIN, OUTPUT);
-  pinMode(RED_PIN, OUTPUT);
+  init_Elevator_Motor();
 }
 
 // Main loop of the µController
 void loop() {
-  if(isYellow == 1) {
-    digitalWrite(YELLOW_PIN,HIGH);
-    delay(420);
-    digitalWrite(YELLOW_PIN,LOW);
-    delay(420);
-  }
   
    if (!client.connected()) {
     reconnect();
-  } client.loop();
-
-
-  
+  } client.loop();  
 }

@@ -7,15 +7,15 @@
 
 ///////////////Parameters & Constants/////////////////
 // WIFI params
-char* WIFI_SSID = "sagemcom9800";    // Configure here the SSID of your WiFi Network
-char* WIFI_PSWD = "ATZNJMYCT2TYDZ"; // Configure here the PassWord of your WiFi Network
+char* WIFI_SSID = "CasaPeña";    // Configure here the SSID of your WiFi Network
+char* WIFI_PSWD = "guaro2021"; // Configure here the PassWord of your WiFi Network
 int WIFI_DELAY  = 100; //ms
-const char* mqtt_server = "192.168.0.21";
+const char* mqtt_server = "192.168.31.214";
 
 // oneM2M : CSE params
-String CSE_IP      = "192.168.0.21"; //Configure here the IP Address of your oneM2M CSE
-int   CSE_HTTP_PORT = 7579;
-String CSE_NAME    = "Mobius";
+String CSE_IP      = "192.168.31.214"; //Configure here the IP Address of your oneM2M CSE
+int   CSE_HTTP_PORT = 7599;
+String CSE_NAME    = "rosemary";
 String CSE_RELEASE = "3"; //Configure here the release supported by your oneM2M CSE
 bool ACP_REQUIRED = true; //Configure here whether or not ACP is required controlling access
 String ACPID = "";

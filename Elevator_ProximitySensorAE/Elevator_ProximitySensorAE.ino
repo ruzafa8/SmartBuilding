@@ -1,11 +1,10 @@
+#include <NewPing.h>
 #include "Wire.h"
 #include <ESP8266WiFi.h>
-#include <PubSubClient.h>
-#include <ArduinoJson.h>
 
-#define GREEN_PIN      D2
-#define YELLOW_PIN     D1
-#define RED_PIN        D0
+#define TRIGGER_PIN  D3
+#define ECHO_PIN     D2
+#define MAX_DISTANCE 50
 
 
 ///////////////Parameters & Constants/////////////////
@@ -17,8 +16,8 @@ const char* mqtt_server = "192.168.31.214";
 
 // oneM2M : CSE params
 String CSE_IP      = "192.168.31.214"; //Configure here the IP Address of your oneM2M CSE
-int   CSE_HTTP_PORT = 7579;
-String CSE_NAME    = "Mobius";
+int   CSE_HTTP_PORT = 7599;
+String CSE_NAME    = "rosemary";
 String CSE_RELEASE = "3"; //Configure here the release supported by your oneM2M CSE
 bool ACP_REQUIRED = true; //Configure here whether or not ACP is required controlling access
 String ACPID = "";
@@ -33,7 +32,7 @@ int TY_AE  = 2;
 int TY_CNT = 3;
 int TY_CI  = 4;
 int TY_SUB = 23;
-String originator = "CSemaphore";
+String originator = "CElevator_ProximitySensor";
 
 // HTTP constants
 int LOCAL_PORT = 80;
@@ -42,13 +41,6 @@ char* HTTP_OK    = "HTTP/1.1 200 OK\r\n";
 int REQUEST_TIME_OUT = 5000; //ms
 int REQUEST_NR = 0;
 
-WiFiClient espClient;
-PubSubClient client(espClient);
-long lastMsg = 0;
-char msg[50];
-int value = 0;
-
-StaticJsonDocument<1024> doc;
 
 //MISC
 #define DEBUG
@@ -59,7 +51,7 @@ StaticJsonDocument<1024> doc;
 const long interval = 10000;
 long currentMillis;
 int SERIAL_SPEED  = 115200;
-int isYellow = 0;
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 WiFiClient client1;
 String context = "";        // The targeted actuator
@@ -304,118 +296,40 @@ void init_WiFi() {
 void task_WiFi() {
 }
 
-void reconnect() {
-  // Loop until we're reconnected
-  while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
-    // Attempt to connect
-    if (client.connect("ESP8266Client")) {
-      Serial.println("connected");
-      // Once connected, publish an announcement...
-      //client.publish("outTopic", "hello world");
-      // ... and resubscribe
-      //client.subscribe("#");
-      String s = "/oneM2M/+/Mobius2/" + originator + "/#";
-      char topic[50]; 
-      s.toCharArray(topic, 50);
-      client.subscribe(topic); 
 
-    } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      // Wait 5 seconds before retrying
-      delay(5000);
-    }
-  }
-}
-
-String process(String json) {
-  DeserializationError error = deserializeJson(doc, json);
-    if (error) {
-      Serial.print(F("deserializeJson() failed: "));
-      Serial.println(error.f_str());
-      return "";
-    }
-    return doc["pc"]["m2m:sgn"]["nev"]["rep"]["m2m:cin"]["con"];
-}
-
-void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-  }
-
-  String strPayload = String((char*)payload);
-  String data = process(strPayload);
-  Serial.println();
-  Serial.print("Recived: " + data);
-  Serial.println();
-
-  if(data != NULL){                                            //CAMBIAR POR CADA AE NUEVO
-    if(data == "red") {                                                             //CAMBIAR POR CADA AE NUEVO
-      isYellow = 0;
-      Serial.println("a");
-      digitalWrite(GREEN_PIN,LOW);
-      digitalWrite(YELLOW_PIN,LOW); 
-      digitalWrite(RED_PIN,HIGH);                                                   //CAMBIAR POR CADA AE NUEVO
-    } else if(data == "green") {                             //CAMBIAR POR CADA AE NUEVO
-      isYellow = 0;
-      digitalWrite(YELLOW_PIN,LOW);
-      digitalWrite(GREEN_PIN,HIGH);                        //CAMBIAR POR CADA AE NUEVO
-      digitalWrite(RED_PIN,LOW);
-    }else if(data=="yellow"){
-      isYellow = 1;
-      digitalWrite(RED_PIN,LOW);
-      digitalWrite(GREEN_PIN,LOW);
-    }
-  }
-
-}
-
-void init_Semaphore(){
-  String initialDescription = "Name=Semaphore;Location=Parking";
-  String initialData = "red";
-  originator = "CSemaphore";
-  registerModule("Semaphore", true, initialDescription, initialData);
+void init_Elevator_ProximitySensor(){
+  String initialDescription = "Name=Elevator_ProximitySensor;Location=Elevator";
+  String initialData = "sensor started";
+  originator = "CElevator_ProximitySensor";
+  registerModule("Elevator_ProximitySensor", false, initialDescription, initialData);
 }
 
 
 void setup() {
   // intialize the serial liaison
   Serial.begin(SERIAL_SPEED);
-  //Set up mqtt client
-  client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
-  client.setBufferSize(1024);
-
+  
   // Connect to WiFi network
   init_WiFi();
 
   // register sensors and actuators
-  init_Semaphore();
-  //set SUBs
-  //originator = "CSemaphore";
-  pinMode(GREEN_PIN, OUTPUT);
-  pinMode(YELLOW_PIN, OUTPUT);
-  pinMode(RED_PIN, OUTPUT);
+  init_Elevator_ProximitySensor();
+    
+  //originator = "CElevator_ProximitySensor";
+
 }
 
 // Main loop of the µController
 void loop() {
-  if(isYellow == 1) {
-    digitalWrite(YELLOW_PIN,HIGH);
-    delay(420);
-    digitalWrite(YELLOW_PIN,LOW);
-    delay(420);
+
+  int distance=0;
+  delay(50);
+  distance=sonar.ping_cm();
+  if(distance<10 && distance!=0){
+    Serial.print("Vehicle detected at ");
+    Serial.print(distance);
+    Serial.println("cm");
+    createCI("Elevator_ProximitySensor", DATA_CNT_NAME,"Detected");
+    delay(2000);
   }
-  
-   if (!client.connected()) {
-    reconnect();
-  } client.loop();
-
-
-  
 }
