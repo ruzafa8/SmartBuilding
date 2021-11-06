@@ -73,9 +73,10 @@ const ListItems = () => {
     setDevicesON(JSON.stringify(currentValue));
   };
 
-  const publicChanges = () => {
+  const publicChanges = async () => {
     console.log("[INFO] SENDING CHANGES");
-    execWS(5, { devicesON: devicesONArray }).then((r) => {
+    let ewemail = await AsyncStorage.getItem("ewemail");
+    execWS(5, { devicesON: devicesONArray, ewemail: ewemail }).then((r) => {
       //console.log(JSON.parse(r.data).return);
       const response = JSON.parse(r.data).return;
       if (response == true) {

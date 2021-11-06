@@ -1,4 +1,4 @@
-const IP = "ws://192.168.68.12:8080";
+const IP = "ws://192.168.31.222:8080";
 
 const PS = {
   checkLogin: 1,
@@ -99,11 +99,7 @@ function execWS(
 
           ws.onmessage = (m) => {
             let data = JSON.parse(m.data);
-            if (data.return) {
-              resolve(true);
-            } else {
-              resolve(false);
-            }
+            resolve(data.return)
           };
         };
         break;
@@ -133,6 +129,7 @@ function execWS(
             JSON.stringify({
               type: "set",
               devicesON: data.devicesON,
+              ewemailChange: data.ewemail
             })
           );
           ws.onmessage = (m) => {

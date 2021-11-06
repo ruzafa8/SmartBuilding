@@ -9,15 +9,15 @@ import {
 } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 
-import { Picker } from "@react-native-picker/picker";
 import ModalSelector from "react-native-modal-selector";
 import execWS from "../services/wsConnection";
+import { showMessage } from "react-native-flash-message";
 
 const fontSize = (font) => {
   return Platform.OS == "ios" ? font + 8 : font;
 };
 
-const RegisterScreen = () => {
+const RegisterScreen = ({navigation}) => {
   const [hasEwelink, setEwelink] = useState("No");
 
   const [username, setUsername] = useState();
@@ -44,14 +44,44 @@ const RegisterScreen = () => {
         ewemail: ewemail,
         ewpassword,
         ewpassword,
-      }).then();
+      }).then((r) => {
+        if (r) {
+          navigation.navigate('Login')
+          showMessage({
+            message: "SUCCESS",
+            description: "You've been registered correctly",
+            type: "success",
+          });
+        }else{
+          showMessage({
+            message: "FAILED",
+            description: "There's been an error uploading data",
+            type: "danger",
+          });
+        }
+      });
     } else {
       execWS(3, {
         username: username,
         password: password,
         licensePlate: licensePlate,
         ewelink: 0,
-      }).then();
+      }).then((r) => {
+        if (r) {
+          navigation.navigate('Login')
+          showMessage({
+            message: "SUCCESS",
+            description: "You've been registered correctly",
+            type: "success",
+          });
+        }else{
+          showMessage({
+            message: "FAILED",
+            description: "There's been an error uploading data",
+            type: "danger",
+          });
+        }
+      });
     }
   };
 

@@ -129,31 +129,23 @@ function parseIncomming(m) {
           con.query(
             `SELECT * FROM USERS WHERE Username='${userReg}'`,
             (e, r) => {
+              console.log(r)
               if (r[0] != undefined) {
                 resolve(JSON.stringify({ return: false }));
               } else {
                 let regQuery;
-                if (ewelinkReg)
-                  regQuery = `INSERT INTO \`USERS\`(\`Username\`, \`Password\`, \`LicensePlate\`, \`Ewelink\`, \`Ewemail\`, \`Ewpassword\`) VALUES ('${userReg}','${passwordReg}','${licensePlate}', 1,'${ewemail}','${ewpassword}')`;
+                if (ewelinkReg == 1)
+                  regQuery = `INSERT INTO \`USERS\`(\`Username\`, \`Password\`, \`LicensePlate\`, \`Ewelink\`, \`Ewemail\`, \`Ewpassword\`) VALUES ('${userReg}','${passwordReg}','${licensePlate}', 1,'${ewemailReg}','${ewpasswordReg}')`;
                 else
-                  regQuery = `INSERT INTO \`USERS\`(\`Username\`, \`Password\`, \`LicensePlate\`, \`Ewelink\`) VALUES (''${userReg}','${passwordReg}','${licensePlate}', 0)`;
-
-                // con.query(regQuery, (err, r1) => {
-                //   console.log(r1);
-                //   // if (r2.affectedRows == 1) {
-                //   //   resolve(JSON.stringify({ return: true }));
-                //   // } else {
-                //   //   resolve(JSON.stringify({ return: false }));
-                //   // }
-                // });
-
-                // ME QUEDÉ AQUÍ QUE NO CONSEGUÍA HACER QUE INSERTARA
-                con.query(
-                  `INSERT INTO \`USERS\`(\`Username\`, \`Password\`, \`LicensePlate\`, \`Ewelink\`) VALUES (''${userReg}','${passwordReg}','${licensePlate}', 0)`,
-                  (e, rw) => {
-                    console.log(rw);
+                  regQuery = `INSERT INTO \`USERS\`(\`Username\`, \`Password\`, \`LicensePlate\`, \`Ewelink\`) VALUES ('${userReg}','${passwordReg}','${licensePlate}', 0)`;
+                con.query(regQuery, (err, r2) => {
+                  console.log(r2);
+                  if (r2.affectedRows == 1) {
+                    resolve(JSON.stringify({ return: true }));
+                  } else {
+                    resolve(JSON.stringify({ return: false }));
                   }
-                );
+                });
               }
             }
           );
@@ -163,8 +155,9 @@ function parseIncomming(m) {
         case "set":
           console.log("[INFO] UPDATING DEVICES");
           let array = data.devicesON;
+          let ewemailChange = data.ewemailChange;
           //console.log(array);
-          const updateQuery = `UPDATE \`USERS\` SET USERS.devicesON='${array}';`;
+          const updateQuery = `UPDATE \`USERS\` SET USERS.devicesON='${array}' WHERE USERS.Ewemail = '${ewemailChange}';`;
           con.query(updateQuery, (e, r) => {
             //console.log(r.affectedRows);
             if (r.affectedRows == 1) {
@@ -237,12 +230,12 @@ function parseIncomming(m) {
                   console.log(JSON.stringify(setDevices));
                   const loadNewDevicesON = `UPDATE \`USERS\` SET USERS.devicesON='${JSON.stringify(
                     setDevices
-                  )}';`;
+                  )}' WHERE USERS.Ewemail='${data.data.ewemail}';`;
                   con.query(loadNewDevicesON, (e, r) => {});
                   const returThisTime = {
                     return: "getDevices",
                     data: { devices },
-                    devicesON: setDevices,
+                    devicesON: JSON.stringify(setDevices),
                   };
                   resolve(JSON.stringify(returThisTime));
                 } else {
