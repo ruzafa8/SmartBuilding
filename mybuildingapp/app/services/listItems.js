@@ -1,11 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { ReloadInstructions } from "react-native/Libraries/NewAppScreen";
+import { View, Text, StyleSheet, Image } from "react-native";
 import execWS from "./wsConnection";
 
-import CheckboxList from "rn-checkbox-list";
-import ConnectingScreen from "../screens/connectingScreen";
+
 import DeviceTab from "../components/deviceTab";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { showMessage } from "react-native-flash-message";
@@ -61,7 +59,7 @@ const ListItems = () => {
   while (devicesNames.length == 0) {
     return (
       <View style={styles.mainView}>
-        <Text>Loading</Text>
+        <Image source={require("../assets/Loading.gif")}/>
       </View>
     );
   }
@@ -128,7 +126,7 @@ const ListItems = () => {
 };
 
 const styles = StyleSheet.create({
-  mainView: { flex: 0.9, width: "100%" },
+mainView: { flex: 0.9, width: "100%", alignItems: "center", justifyContent: "center" },
   scrollView: { flex: 0.85, width: "100%" },
   viewApply: {
     flex: 0.15,
