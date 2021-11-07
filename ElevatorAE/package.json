@@ -1,5 +1,5 @@
 {
-  "name": "buildingae",
+  "name": "elevatorae",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,10 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
-    "ewelink-api": "^3.1.1",
-    "mqtt": "^4.2.8",
-    "mysql": "^2.18.1",
-    "node-fetch": "^2.6.1"
+    "express": "^4.17.1",
+    "mysql": "^2.18.1"
   }
 }

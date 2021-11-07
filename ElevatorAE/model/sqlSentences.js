@@ -1,0 +1,9 @@
+module.exports = {
+    createDB: 'CREATE DATABASE IF NOT EXISTS ELEVATOR;',
+    setDB: 'USE ELEVATOR',
+    createTableElevator: `CREATE TABLE IF NOT EXISTS ELEVATOR (
+        ID INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+        FLOORS VARCHAR(50) NOT NULL,
+        OTP VARCHAR(4)
+    ) ENGINE=InnoDB;`
+}
