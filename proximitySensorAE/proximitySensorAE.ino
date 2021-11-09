@@ -6,7 +6,6 @@
 #define ECHO_PIN     D2
 #define MAX_DISTANCE 50
 
-
 ///////////////Parameters & Constants/////////////////
 // WIFI params
 char* WIFI_SSID = "sagemcom9800";    // Configure here the SSID of your WiFi Network
@@ -278,7 +277,6 @@ void registerModule(String module, bool isActuator, String intialDescription, St
 }
 
 
-
 void init_WiFi() {
   Serial.println("Connecting to  " + String(WIFI_SSID) + " ...");
   WiFi.persistent(false);
@@ -293,13 +291,11 @@ void init_WiFi() {
   // Connected, show the obtained ip address
   Serial.println("WiFi Connected ==> IP Address = " + WiFi.localIP().toString());
 }
-void task_WiFi() {
-}
-
+void task_WiFi() {}
 
 void init_ProximitySensor(){
-  String initialDescription = "Name=ProximitySensor;Location=Parking";
-  String initialData = "0";
+  String initialDescription = "Name=ProximitySensor;Location=Parking;Desc=it publishes 'Detected' when detects something.";
+  String initialData = "";
   originator = "CProximitySensor";
   registerModule("ProximitySensor", false, initialDescription, initialData);
 }
@@ -311,25 +307,24 @@ void setup() {
   
   // Connect to WiFi network
   init_WiFi();
-
+  
   // register sensors and actuators
-    init_ProximitySensor();
-  //set SUBs
-  //originator = "CProximitySensor";
-
+  init_ProximitySensor();
 }
 
 // Main loop of the µController
 void loop() {
-
   int distance=0;
+  // 50 ms between each detection
   delay(50);
   distance=sonar.ping_cm();
+  // 0 means no detection
   if(distance<10 && distance!=0){
-    Serial.print("Vehicle detected at ");
+    Serial.print("Something detected at ");
     Serial.print(distance);
     Serial.println("cm");
     createCI("ProximitySensor", DATA_CNT_NAME,"Detected");
+    // Delay to avoid detect the same object twice
     delay(2000);
   }
 }
