@@ -18,7 +18,7 @@ MQTT_IP="192.168.0.21"
 ACP_NAME = "MYACP"
 AE_NAME = "Camera"
 DESCRIPTOR_CONTAINER="DESCRIPTOR"
-description="This is a camera which takes pictures when receives Shoot command"
+description="Name=Camera;Location=Parking;Desc=This is a camera which takes pictures when receives Shoot command"
 DATA_CONTAINER = "DATA"
 COMMAND_CONTAINER = "COMMAND"
 CSE_NAME = "Mobius"
@@ -38,20 +38,21 @@ IMAGE_PATH = "/var/www/html/"
 
 
 # Function for creating the LicensePlateRecog AE with all its containers
-def registerAE(ae, acp, cntDescription, description, cntData, cntCommand):
+def registerAE(ae, isActuator, description):
     
     module.createAE(ae)
-    module.createACP(ae, acp)
-    module.createCNT(ae, cntDescription)
-    module.createCI(ae, cntDescription, description)
-    module.createCNT(ae, cntData)
-    module.createCNT(ae, cntCommand)
-    module.createSUB(ae, ae, cntCommand)
+    module.createACP(ae, ACP_NAME)
+    module.createCNT(ae, DESCRIPTOR_CONTAINER)
+    module.createCI(ae, DESCRIPTOR_CONTAINER, description)
+    module.createCNT(ae, DATA_CONTAINER)
+    if isActuator:
+        module.createCNT(ae, COMMAND_CONTAINER)
+        module.createSUB(ae, ae, COMMAND_CONTAINER)
 
 
 
 # Creates AE entity and containers inside
-registerAE(AE_NAME, ACP_NAME, DESCRIPTOR_CONTAINER, description, DATA_CONTAINER, COMMAND_CONTAINER)
+registerAE(AE_NAME, True, description)
 
 
 
@@ -62,26 +63,33 @@ def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
 
     # Subscribe to the corresponding topic
-    client.subscribe("/oneM2M/req/Mobius2/Camera/json")
+    client.subscribe("/oneM2M/req/Mobius2/CCamera/json")
 
 
 
 # The callback to handle an incoming message over MQTT
 def on_message(client, userdata, msg):
     global global_counter
+
     # Processes the message and converts it into a json format
     message = msg.payload
     jsonP = json.loads(message)
+
+    # Proccess topic:
+    topic = msg.topic.split("/")
+    try:
+        rqi = jsonP["rqi"]
+    except:
+        rqi = ''
+    pload = json.dumps("rsc":2001,"to":"","fr":"CCamera","rqi":rqi,"pc":'')
+    client.publish("/oneM2M/resp/Mobius2/CCamera/json",payload=pload)
 
     # Looks for the "con" property which contains the URL to the image
     try:
         con = jsonP["pc"]["m2m:sgn"]["nev"]["rep"]["m2m:cin"]["con"]
         if con=="Shoot":
-            print(con)
             global_counter= (global_counter + 1) % 10
-            print(global_counter)
             path_img=IMAGE_PATH+"{}.jpg".format(global_counter)
-            print(path_img)
             camera.capture(path_img)
             print(path_img)
             
