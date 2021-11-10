@@ -59,7 +59,7 @@ registerAE(AE_NAME, True, description)
 # Function to execute when connected to MQTT
 def on_connect(client, userdata, flags, rc):
 
-    # Make shure that its connected (should return code 0)
+    # Make sure that its connected (should return code 0)
     print("Connected with result code "+str(rc))
 
     # Subscribe to the corresponding topic
