@@ -96,7 +96,7 @@ def createSUB(subscriptor, broadcaster, container):
     return requestCSE("/{}/{}".format(broadcaster, container), ty["SUB"], {
       "m2m:sub": {
         "rn": "SUB_{}".format(subscriptor),
-        "nu": ["mqtt://{}/{}?ct=json".format(CSE_NAME, subscriptor)],
+        "nu": ["mqtt://{}/C{}?ct=json".format(CSE_NAME, subscriptor)],
         "enc": {
           "net": [3],
         },

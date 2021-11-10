@@ -11,14 +11,14 @@ import ANPRnoRestart as ANPR
 # GLOBAL VARIABLES
 ACP_NAME = "MYACP"
 AE_NAME = "LicensePlateRecog"
-DESCRIPTION = "This is a neuronal network for number-plate recognition"
+DESCRIPTION = "Name=LicensePlateRecog;Location=Building;Desc=This is a neuronal network for number-plate recognition"
 DESC_CONTAINER = "DESCRIPTOR"
 DATA_CONTAINER = "DATA"
 COMMAND_CONTAINER = "COMMAND"
-CSE_URL = "217.217.108.122:7579"
+CSE_URL = "localhost:7579"
 CSE_NAME = "Mobius"
 CSE_RELEASE = 3
-MQTT_IP="217.217.108.122"
+MQTT_IP="localhost"
 MQTT_PORT=1883
 
 DOWNLOADED_IMAGE_PATH = "./DownloadedImage"
@@ -29,20 +29,20 @@ module.ACP_NAME = ACP_NAME
 
 
 # Function for creating the LicensePlateRecog AE with all its containers
-def registerAE(ae, acp, cntDescription, description, cntData, cntCommand):
-    
+def registerAE(ae, isActuator, description):
     module.createAE(ae)
-    module.createACP(ae, acp)
-    module.createCNT(ae, cntDescription)
-    module.createCI(ae, cntDescription, description)
-    module.createCNT(ae, cntData)
-    module.createCNT(ae, cntCommand)
-    module.createSUB(ae, ae, cntCommand)
+    module.createACP(ae, ACP_NAME)
+    module.createCNT(ae, DESC_CONTAINER)
+    module.createCI(ae, DESC_CONTAINER, description)
+    module.createCNT(ae, DATA_CONTAINER)
+    if isActuator:
+        module.createCNT(ae, COMMAND_CONTAINER)
+        module.createSUB(ae, ae, COMMAND_CONTAINER)
 
 
 
 # Creates AE entity and containers inside
-registerAE(AE_NAME, ACP_NAME, DESC_CONTAINER, DESCRIPTION, DATA_CONTAINER, COMMAND_CONTAINER)
+registerAE(AE_NAME, True, DESCRIPTION)
 
 # Executes a null recognition to load all the drivers
 ANPR.runDetection(export=False)
@@ -55,7 +55,7 @@ def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
 
     # Subscribe to the corresponding topic
-    client.subscribe("/oneM2M/req/Mobius2/{}/json".format(AE_NAME))
+    client.subscribe("/oneM2M/req/Mobius2/C{}/json".format(AE_NAME))
 
 
 
@@ -65,6 +65,15 @@ def on_message(client, userdata, msg):
     # Processes the message and converts it into a json format
     message = msg.payload
     jsonP = json.loads(message)
+
+    # Proccess topic:
+    topic = msg.topic.split("/")
+    try:
+        rqi = jsonP["rqi"]
+    except:
+        rqi = ''
+    pload = json.dumps({"rsc":2001,"to":"","fr":"CLicensePlateRecog","rqi":rqi,"pc":''})
+    client.publish("/oneM2M/resp/Mobius2/CLicensePlateRecog/json",payload=pload)
 
     # Looks for the "con" property which contains the URL to the image
     try:
@@ -77,7 +86,7 @@ def on_message(client, userdata, msg):
             file = open("{}/image.jpg".format(DOWNLOADED_IMAGE_PATH), "wb")
             file.write(response.content)
             file.close()
-            numberPlate = ANPR.runDetection("{}/image.jpg".format(DOWNLOADED_IMAGE_PATH), export=False)
+            numberPlate = ANPR.runDetection("{}/image.jpg".format(DOWNLOADED_IMAGE_PATH), export=True)
             if numberPlate != False:
                 print(numberPlate[0])
                 module.createCI(AE_NAME, DATA_CONTAINER, numberPlate[0])
