@@ -313,24 +313,11 @@ void reconnect() {
     // Attempt to connect
     if (client.connect("ESP8266Client")) {
       Serial.println("connected");
-      // Once connected, publish an announcement...
-      //client.publish("outTopic", "hello world");
-      // ... and resubscribe
-      //client.subscribe("#");
-      String s = "/oneM2M/+/" + originator + "/+/#";
-      char topic[50]; 
+
+      String s  = "/oneM2M/req/+/" + originator + "/#";
+      char topic[50];
       s.toCharArray(topic, 50);
-      client.subscribe(topic); 
-
-      s = "/oneM2M/resp/" + originator + "/+/#";
-      char topic2[50];
-      s.toCharArray(topic2, 50);
-      client.subscribe(topic2);
-
-      s = "/oneM2M/req/+/" + originator + "/#";
-      char topic3[50];
-      s.toCharArray(topic3, 50);
-      client.subscribe(topic3);
+      client.subscribe(topic);
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -341,44 +328,48 @@ void reconnect() {
   }
 }
 
-String process(String json) {
+void process(String json) {
   DeserializationError error = deserializeJson(doc, json);
     if (error) {
       Serial.print(F("deserializeJson() failed: "));
       Serial.println(error.f_str());
-      return "";
     }
-    return doc["pc"]["m2m:sgn"]["nev"]["rep"]["m2m:cin"]["con"];
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-  }
 
   String strPayload = String((char*)payload);
-  String data = process(strPayload);
+  process(strPayload);
+  String data = doc["pc"]["m2m:sgn"]["nev"]["rep"]["m2m:cin"]["con"];
+  String rqi = doc["rqi"];
   Serial.println();
   Serial.print("Recived: " + data);
   Serial.println();
 
-  if(data != NULL){                                            //CAMBIAR POR CADA AE NUEVO
-    if(data == "open") {                                                             //CAMBIAR POR CADA AE NUEVO
-      stepper.step(500);
+  String msg = "{\"rsc\":2001,\"to\":\"\",\"fr\":\"CMotor\",\"rqi\":\""+ rqi + "\",\"pc\":\"\"}";
+  char buf[100];
+  msg.toCharArray(buf,100);
+  Serial.println(msg);
+  
+  client.publish("/oneM2M/resp/Mobius2/CMotor/json", buf);
+
+  if(data != NULL){
+    if(data == "open") {
+      stepper.step(105);
       createCI("Motor",DATA_CNT_NAME,"opened");
       
       delay(1000);
-      stepper.step(-500);
+      stepper.step(-105);
       createCI("Motor",DATA_CNT_NAME,"closed");
   }
   }
 }
 
 void init_Motor(){
-  String initialDescription = "Name=Motor;Location=Parking";
+  String initialDescription = "Name=Motor;Location=Parking;Desc=A Motor which opens or closes a garage door";
   String initialData = "closed";
   originator = "CMotor";
   registerModule("Motor", true, initialDescription, initialData);
@@ -400,19 +391,17 @@ void setup() {
   
   // set stepper motor speed to 10rpm
   stepper.setSpeed(10); 
+
   // Connect to WiFi network
   init_WiFi();
 
   // register sensors and actuators
   init_Motor();
-  //set SUBs
-  //originator = "CMotor";
 
 }
 
 // Main loop of the µController
 void loop() {
-  
    if (!client.connected()) {
     reconnect();
   } client.loop();
