@@ -9,6 +9,7 @@ cse.registerModule(AE_NAME, true, `NAME=${AE_NAME}`,'0').then(() => {
     cse.registerSubscription(AE_NAME, "ProximitySensor", "DATA");
     cse.registerSubscription(AE_NAME, "Camera", "DATA");
     cse.registerSubscription(AE_NAME, "LicensePlateRecog", "DATA");
+    cse.registerSubscription(AE_NAME, "Motor", "DATA");
 });
 
 onMessage(async (topic, message) => {

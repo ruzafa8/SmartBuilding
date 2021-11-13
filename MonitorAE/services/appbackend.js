@@ -9,15 +9,15 @@ const wss = new WebSocketServer({ port: port });
 console.log("[INFO] WebSocket Server started, port: " + port);
 
 var con = mysql.createConnection({
-  host: "192.168.31.214",
+  host: "localhost",
   port: 3306,
-  user: "myBuilding",
-  password: "123",
+  user: "root",
+  password: "root",
   database: "building",
 });
 
 const mqtt = require('mqtt')
-let client  = mqtt.connect('mqtt://192.168.31.214')
+let client  = mqtt.connect('mqtt://192.168.0.21')
 client.on('connect', () => {
   client.subscribe('/oneM2M/req/Mobius2/MobileApp/json');
   client.on('message', (topic, message) => {

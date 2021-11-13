@@ -1,4 +1,4 @@
-const IP = "ws://192.168.31.222:8080";
+const IP = "ws://192.168.0.30:8080";
 
 const PS = {
   checkLogin: 1,

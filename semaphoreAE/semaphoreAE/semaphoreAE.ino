@@ -311,10 +311,6 @@ void reconnect() {
     // Attempt to connect
     if (client.connect("ESP8266Client")) {
       Serial.println("connected");
-      // Once connected, publish an announcement...
-      //client.publish("outTopic", "hello world");
-      // ... and resubscribe
-      //client.subscribe("#");
       String s = "/oneM2M/+/Mobius2/" + originator + "/#";
       char topic[50]; 
       s.toCharArray(topic, 50);
@@ -330,14 +326,12 @@ void reconnect() {
   }
 }
 
-String process(String json) {
+void process(String json) {
   DeserializationError error = deserializeJson(doc, json);
     if (error) {
       Serial.print(F("deserializeJson() failed: "));
       Serial.println(error.f_str());
-      return "";
     }
-    return doc["pc"]["m2m:sgn"]["nev"]["rep"]["m2m:cin"]["con"];
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -349,22 +343,31 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 
   String strPayload = String((char*)payload);
-  String data = process(strPayload);
+  process(strPayload);
+  String data = doc["pc"]["m2m:sgn"]["nev"]["rep"]["m2m:cin"]["con"];
+  String rqi = doc["rqi"];
   Serial.println();
   Serial.print("Recived: " + data);
   Serial.println();
 
-  if(data != NULL){                                            //CAMBIAR POR CADA AE NUEVO
-    if(data == "red") {                                                             //CAMBIAR POR CADA AE NUEVO
+  String msg = "{\"rsc\":2001,\"to\":\"\",\"fr\":\"CSemaphore\",\"rqi\":\""+ rqi + "\",\"pc\":\"\"}";
+  char buf[100];
+  msg.toCharArray(buf,100);
+  Serial.println(msg);
+  
+  client.publish("/oneM2M/resp/Mobius2/CSemaphore/json", buf);
+
+
+  if(data != NULL){                                            
+    if(data == "red") {                                                            
       isYellow = 0;
-      Serial.println("a");
       digitalWrite(GREEN_PIN,LOW);
       digitalWrite(YELLOW_PIN,LOW); 
-      digitalWrite(RED_PIN,HIGH);                                                   //CAMBIAR POR CADA AE NUEVO
-    } else if(data == "green") {                             //CAMBIAR POR CADA AE NUEVO
+      digitalWrite(RED_PIN,HIGH);      
+    } else if(data == "green") {   
       isYellow = 0;
       digitalWrite(YELLOW_PIN,LOW);
-      digitalWrite(GREEN_PIN,HIGH);                        //CAMBIAR POR CADA AE NUEVO
+      digitalWrite(GREEN_PIN,HIGH); 
       digitalWrite(RED_PIN,LOW);
     }else if(data=="yellow"){
       isYellow = 1;
@@ -376,7 +379,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void init_Semaphore(){
-  String initialDescription = "Name=Semaphore;Location=Parking";
+  String initialDescription = "Name=Semaphore;Location=Parking;Desc=A Semaphore which can be turned on in red, green or yellow";
   String initialData = "red";
   originator = "CSemaphore";
   registerModule("Semaphore", true, initialDescription, initialData);
@@ -415,7 +418,4 @@ void loop() {
    if (!client.connected()) {
     reconnect();
   } client.loop();
-
-
-  
 }

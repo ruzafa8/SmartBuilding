@@ -38,9 +38,6 @@ const processData = (originator, data) => {
         case "Motor":
             if(data == "opened") {
                 cseService.instanciate("Semaphore", "COMMAND", "green");
-                setTimeout(() => {
-                    cseService.instanciate("Motor","COMMAND", "close");
-                },5000);
             } else if(data == "closed") {
                 cseService.instanciate("Semaphore", "COMMAND", "red");
             }

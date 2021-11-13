@@ -25,7 +25,7 @@ const MyGallery = () => {
   return <>
     <CustomGallery layoutRef={layoutRef} ui={PhotoswipeUIDefault}>
         <div style={{display:"flex",flexWrap:"wrap"}}>{
-        Array.from({ length:10}, (_, i) => `http://192.168.31.232/${i}.jpg`)
+        Array.from({ length:10}, (_, i) => `http://192.168.0.21:8000/${i}.jpg`)
             .map(url => <Photo url={url}/>)
     }</div>
     </CustomGallery>

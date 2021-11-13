@@ -16,7 +16,6 @@ app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`);
 });
 
-cse.registerModule(AE_NAME, true, `NAME=${AE_NAME}`,'0').then(() => {});
 rosemary.registerModule(AE_NAME, false, `NAME=${AE_NAME}`,'0').then(() => {});
 
 onMessage(async (topic, message) => {
@@ -33,15 +32,23 @@ onMessage(async (topic, message) => {
 const processData = (ae, data) => {
     switch(ae) {
         case AE_NAME:
-            // TODO: create CI to Motor
+            // Tell the elevator what floor to go
+            rosemary.instanciate("Elevator_Motor", "COMMAND", data);
             break;
         case "Elevator_ProximitySensor":
-            elevatorService.changeOTP(1,data);
+            // Tell the Screen that someone is in front the elevator
+            rosemary.instanciate("Elevator_Screen", "COMMAND", "detect");
+            // It could be added an instruction to store the number of detections at database
             break;
         case "Elevator_Screen":
+            // The screen tells an otp, which is stored at database
             elevatorService.setOTP(1,data);
+            // When the user send the OTP from the mobile frontend (Thrugh HTTP),
+            // It will be contrasted with the one at database
             break;
         case "Elevator_Motor":
+            console.log("The elevator is at " + data + " floor");
+            // It could be added an instruction to store the floors where the elevator goes
             break;
 
     }

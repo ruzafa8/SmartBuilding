@@ -56,4 +56,16 @@ router.post("/:id/check-otp", express.json(), async (req, res) =>{
     }
 })
 
+router.post("/:id/go-to", express.json(), async (req, res) =>{
+    try {
+        const id = req.params.id;
+        const desiredFloor = req.body.desiredFloor;
+        rosemary.instanciate("Elevator_Motor", "COMMAND", desiredFloor);
+        res.status(204).end();
+    } catch(error) {
+        console.error(error);
+        res.status(500);
+    }
+})
+
 module.exports = router;

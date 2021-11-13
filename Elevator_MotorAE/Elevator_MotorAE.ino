@@ -318,24 +318,10 @@ void reconnect() {
     // Attempt to connect
     if (client.connect("ESP8266Client")) {
       Serial.println("connected");
-      // Once connected, publish an announcement...
-      //client.publish("outTopic", "hello world");
-      // ... and resubscribe
-      //client.subscribe("#");
-      String s = "/oneM2M/+/" + originator + "/+/#";
-      char topic[50]; 
+      String s = "/oneM2M/req/+/" + originator + "/#";
+      char topic[50];
       s.toCharArray(topic, 50);
-      client.subscribe(topic); 
-
-      s = "/oneM2M/resp/" + originator + "/+/#";
-      char topic2[50];
-      s.toCharArray(topic2, 50);
-      client.subscribe(topic2);
-
-      s = "/oneM2M/req/+/" + originator + "/#";
-      char topic3[50];
-      s.toCharArray(topic3, 50);
-      client.subscribe(topic3);
+      client.subscribe(topic);
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -346,14 +332,12 @@ void reconnect() {
   }
 }
 
-String process(String json) {
+void process(String json) {
   DeserializationError error = deserializeJson(doc, json);
     if (error) {
       Serial.print(F("deserializeJson() failed: "));
       Serial.println(error.f_str());
-      return "";
     }
-    return doc["pc"]["m2m:sgn"]["nev"]["rep"]["m2m:cin"]["con"];
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -365,10 +349,19 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 
   String strPayload = String((char*)payload);
-  String data = process(strPayload);
+  process(strPayload);
+  String data = doc["pc"]["m2m:sgn"]["nev"]["rep"]["m2m:cin"]["con"];
+  String rqi = doc["rqi"];
   Serial.println();
   Serial.print("Recived: " + data);
   Serial.println();
+
+  String msg = "{\"rsc\":2001,\"to\":\"\",\"fr\":\"CElevator_Motor\",\"rqi\":\""+ rqi + "\",\"pc\":\"\"}";
+  char buf[100];
+  msg.toCharArray(buf,100);
+  Serial.println(msg);
+  
+  client.publish("/oneM2M/resp/rosemary/CElevator_Motor/json", buf);
 
   if(data != NULL){                                            
     if(data != "") {                                                             
